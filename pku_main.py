@@ -9,16 +9,16 @@ from pathlib import Path
 from utils.config import get_config
 from utils.optimizer import build_optimizer, build_scheduler
 from utils.tools import AverageMeter, epoch_saving, load_checkpoint, generate_text
-from datasets.build_real60 import build_dataloader
+from datasets.build_pku import build_dataloader
 from utils.logger import create_logger
 import time
 import numpy as np
 import random
 from apex import amp
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
-from datasets.blending import CutmixMixupBlending4_real60
+from datasets.blending import CutmixMixupBlending4_pku
 from utils.config import get_config
-from models import primo_real60 as primo
+from models import mspnet_pku as mspnet
 import torchvision.transforms as transforms
 from ipdb import set_trace as st
 from torch.cuda.amp import GradScaler, autocast
@@ -55,7 +55,7 @@ def parse_option():
 def main(config): 
 
     train_data, val_data, train_loader, val_loader = build_dataloader(logger, config)
-    model, _ = primo.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
+    model, _ = mspnet.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
                          device="cpu", jit=False, 
                          T=config.DATA.NUM_FRAMES, 
                          droppath=config.MODEL.DROP_PATH_RATE, 
@@ -68,7 +68,7 @@ def main(config):
     mixup_fn = None
     if config.AUG.MIXUP > 0:
         criterion = SoftTargetCrossEntropy()
-        mixup_fn = CutmixMixupBlending4_real60(num_classes1=config.DATA.NUM_CLASSES, 
+        mixup_fn = CutmixMixupBlending4_pku(num_classes1=config.DATA.NUM_CLASSES, 
                                         num_classes2=22,
                                         num_uuu=2,
                                         num_vvv=5,

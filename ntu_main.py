@@ -19,7 +19,7 @@ from apex import amp
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from datasets.blending import CutmixMixupBlending4
 from utils.config import get_config
-from models import primo_ntu120 as primo
+from models import mspnet_ntu120 as mspnet
 import torchvision.transforms as transforms
 from ipdb import set_trace as st
 from torch.cuda.amp import GradScaler, autocast
@@ -28,8 +28,8 @@ from torch.cuda.amp import GradScaler, autocast
 # --config configs/NTU/NTU120_XSet.yaml \
 # --distributed True \
 # --accumulation-steps 2 \
-# --output /data2/XCLIP/Primo/output/1211_ntu_loss \
-# > /data2/XCLIP/Primo/output/1211_ntu_loss/1001_fd4_ntu_loss.log 2>&1
+# --output /data2/XCLIP/mspnet/output/1211_ntu_loss \
+# > /data2/XCLIP/mspnet/output/1211_ntu_loss/1001_fd4_ntu_loss.log 2>&1
 
 
 #train_idset = [0, 1, 5, 6, 7, 10, 14, 15, 16, 17, 18, 21, 22, 23, 24, 26, 27, 36, 40, 41, 42, 43, 44, 47, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 66, 74, 75, 77, 78, 79, 80, 81, 82, 83, 84, 85, 87, 90, 91, 92, 93, 94, 95]
@@ -62,7 +62,7 @@ def parse_option():
 def main(config): 
 
     train_data, val_data, train_loader, val_loader = build_dataloader(logger, config)
-    model, _ = primo.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
+    model, _ = mspnet.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
                          device="cpu", jit=False, 
                          T=config.DATA.NUM_FRAMES, 
                          droppath=config.MODEL.DROP_PATH_RATE, 
