@@ -19,7 +19,7 @@ from apex import amp
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from datasets.blending import CutmixMixupBlending4
 from utils.config import get_config
-from models import mspnet_ntu120 as mspnet
+from models import mspnet_ntu120 as MSPNet
 import torchvision.transforms as transforms
 from ipdb import set_trace as st
 from torch.cuda.amp import GradScaler, autocast
@@ -62,7 +62,7 @@ def parse_option():
 def main(config): 
 
     train_data, val_data, train_loader, val_loader = build_dataloader(logger, config)
-    model, _ = mspnet.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
+    model, _ = MSPNet.load(config.MODEL.PRETRAINED, config.MODEL.ARCH, 
                          device="cpu", jit=False, 
                          T=config.DATA.NUM_FRAMES, 
                          droppath=config.MODEL.DROP_PATH_RATE, 
